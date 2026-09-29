@@ -4,7 +4,7 @@ A Flutter mobile app for managing intern profiles, assigned tasks and progress t
 
 Built as an internship task for [Internee.pk](https://internee.pk).
 
-> **Status:** 📝 Planning. Requirements and technical design are done; development starts next.
+> **Status:** 📝 In development. Project structure is set up; Firebase and features come next.
 
 ## Planned Features
 
@@ -23,6 +23,21 @@ Built as an internship task for [Internee.pk](https://internee.pk).
 
 Flutter · Dart · Firebase Authentication · Cloud Firestore · Riverpod · go_router
 
+## Folder Structure
+
+```
+lib/
+├── main.dart
+├── app/                 # app widget, router, theme
+├── core/                # constants, utils, shared widgets
+└── features/
+    ├── auth/            # data, providers, presentation
+    ├── interns/         # data, models, providers, presentation
+    ├── tasks/           # data, models, providers, presentation
+    └── dashboard/       # providers, presentation
+test/
+```
+
 ## Documentation
 
 - [Product Requirements (PRD)](docs/PRD.md)
@@ -31,7 +46,8 @@ Flutter · Dart · Firebase Authentication · Cloud Firestore · Riverpod · go_
 ## Roadmap
 
 - [x] Requirements and technical design
-- [ ] Project setup and Firebase connection
+- [x] Flutter project and folder structure
+- [ ] Firebase connection
 - [ ] Authentication and role-based routing
 - [ ] Intern features
 - [ ] Admin features
