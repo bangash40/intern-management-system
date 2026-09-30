@@ -33,7 +33,9 @@ class _ShellPlaceholder extends ConsumerWidget {
           IconButton(
             tooltip: 'Toggle light / dark mode',
             icon: Icon(
-              brightness == Brightness.dark ? Icons.light_mode : Icons.dark_mode,
+              brightness == Brightness.dark
+                  ? Icons.light_mode
+                  : Icons.dark_mode,
             ),
             onPressed: () =>
                 ref.read(themeModeProvider.notifier).toggle(brightness),
