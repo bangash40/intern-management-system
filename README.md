@@ -23,6 +23,17 @@ Built as an internship task for [Internee.pk](https://internee.pk).
 
 Flutter · Dart · Firebase Authentication · Cloud Firestore · Riverpod · go_router
 
+## Dependencies
+
+| Package | Purpose |
+|---|---|
+| `firebase_core`, `firebase_auth`, `cloud_firestore` | Firebase setup, login and database |
+| `flutter_riverpod` | State management |
+| `go_router` | Navigation and role-based redirects |
+| `intl` | Date formatting |
+| `fl_chart` | Dashboard charts |
+| `fake_cloud_firestore`, `firebase_auth_mocks` (dev) | Testing without a real backend |
+
 ## Folder Structure
 
 ```
