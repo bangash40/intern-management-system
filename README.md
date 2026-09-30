@@ -34,6 +34,14 @@ Flutter · Dart · Firebase Authentication · Cloud Firestore · Riverpod · go_
 | `fl_chart` | Dashboard charts |
 | `fake_cloud_firestore`, `firebase_auth_mocks` (dev) | Testing without a real backend |
 
+## Firebase Setup
+
+The Firebase config files are not committed, so after cloning you need to add them yourself:
+
+1. Create a Firebase project with **Email/Password** sign-in and **Cloud Firestore** enabled.
+2. Register the Android app (`com.example.intern_management_system`) and place the downloaded `google-services.json` in `android/app/`.
+3. Generate `lib/firebase_options.dart` with `flutterfire configure` (this also sets up iOS).
+
 ## Folder Structure
 
 ```
@@ -58,7 +66,7 @@ test/
 
 - [x] Requirements and technical design
 - [x] Flutter project and folder structure
-- [ ] Firebase connection
+- [x] Firebase connection
 - [ ] Authentication and role-based routing
 - [ ] Intern features
 - [ ] Admin features
