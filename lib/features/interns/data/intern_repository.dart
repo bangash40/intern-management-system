@@ -71,6 +71,36 @@ class InternRepository {
         });
   }
 
+  /// One intern's profile, live. Null when it does not exist.
+  Stream<AppUser?> watchIntern(String uid) =>
+      _users.doc(uid).snapshots().map((doc) {
+        final data = doc.data();
+        if (!doc.exists || data == null) return null;
+        return AppUser.fromMap({...data, 'uid': doc.id});
+      });
+
+  /// Edits the profile fields. The email cannot be changed.
+  Future<void> updateIntern(AppUser intern) => _users.doc(intern.uid).update({
+    'name': intern.name.trim(),
+    'phone': intern.phone.trim(),
+    'department': intern.department.trim(),
+    'mentor': intern.mentor.trim(),
+    'startDate': intern.startDate == null
+        ? null
+        : Timestamp.fromDate(intern.startDate!),
+    'endDate': intern.endDate == null
+        ? null
+        : Timestamp.fromDate(intern.endDate!),
+    'updatedAt': FieldValue.serverTimestamp(),
+  });
+
+  /// Deactivated interns cannot use the app, but their history is kept.
+  Future<void> setActive(String uid, {required bool isActive}) =>
+      _users.doc(uid).update({
+        'isActive': isActive,
+        'updatedAt': FieldValue.serverTimestamp(),
+      });
+
   /// Creates the intern's login and profile. Returns the new profile.
   ///
   /// Throws an [AuthException] with a readable message on failure.

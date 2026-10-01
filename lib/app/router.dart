@@ -7,7 +7,8 @@ import '../features/auth/presentation/login_screen.dart';
 import '../features/auth/providers/auth_providers.dart';
 import '../features/dashboard/presentation/admin_dashboard_screen.dart';
 import '../features/dashboard/presentation/intern_dashboard_screen.dart';
-import '../features/interns/presentation/add_intern_screen.dart';
+import '../features/interns/presentation/intern_form_screen.dart';
+import '../features/interns/presentation/intern_detail_screen.dart';
 import '../features/interns/presentation/interns_list_screen.dart';
 import '../features/tasks/presentation/admin_task_detail_screen.dart';
 import '../features/tasks/presentation/all_tasks_screen.dart';
@@ -24,6 +25,8 @@ class AppRoutes {
   static const String intern = '/intern';
   static const String interns = '/admin/interns';
   static const String addIntern = '/admin/interns/new';
+  static String internDetail(String id) => '/admin/interns/$id';
+  static String editIntern(String id) => '/admin/interns/$id/edit';
   static const String allTasks = '/admin/tasks';
   static const String addTask = '/admin/tasks/new';
   static String adminTask(String id) => '/admin/tasks/$id';
@@ -77,7 +80,19 @@ final routerProvider = Provider<GoRouter>((ref) {
             path: 'interns',
             builder: (_, _) => const InternsListScreen(),
             routes: [
-              GoRoute(path: 'new', builder: (_, _) => const AddInternScreen()),
+              GoRoute(path: 'new', builder: (_, _) => const InternFormScreen()),
+              GoRoute(
+                path: ':id',
+                builder: (_, state) =>
+                    InternDetailScreen(internId: state.pathParameters['id']!),
+                routes: [
+                  GoRoute(
+                    path: 'edit',
+                    builder: (_, state) =>
+                        InternFormScreen(internId: state.pathParameters['id']),
+                  ),
+                ],
+              ),
             ],
           ),
           GoRoute(

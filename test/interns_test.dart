@@ -6,7 +6,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:intern_management_system/core/constants/enums.dart';
 import 'package:intern_management_system/features/auth/data/auth_repository.dart';
 import 'package:intern_management_system/features/interns/data/intern_repository.dart';
-import 'package:intern_management_system/features/interns/presentation/add_intern_screen.dart';
+import 'package:intern_management_system/features/interns/presentation/intern_form_screen.dart';
 import 'package:intern_management_system/features/interns/presentation/interns_list_screen.dart';
 import 'package:intern_management_system/features/interns/providers/intern_providers.dart';
 
@@ -158,7 +158,7 @@ void main() {
     });
   });
 
-  group('AddInternScreen', () {
+  group('InternFormScreen', () {
     Future<void> pumpForm(
       WidgetTester tester, {
       CreateAuthUser? createAuthUser,
@@ -176,7 +176,7 @@ void main() {
               ),
             ),
           ],
-          child: const MaterialApp(home: AddInternScreen()),
+          child: const MaterialApp(home: InternFormScreen()),
         ),
       );
     }

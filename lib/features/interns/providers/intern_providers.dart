@@ -11,3 +11,8 @@ final internRepositoryProvider = Provider<InternRepository>(
 final internsProvider = StreamProvider.autoDispose<List<AppUser>>(
   (ref) => ref.watch(internRepositoryProvider).watchInterns(),
 );
+
+/// Live profile of one intern (admin).
+final internProvider = StreamProvider.autoDispose.family<AppUser?, String>(
+  (ref, uid) => ref.watch(internRepositoryProvider).watchIntern(uid),
+);

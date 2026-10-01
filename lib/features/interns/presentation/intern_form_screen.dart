@@ -4,28 +4,70 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../core/utils/validators.dart';
 import '../../../core/widgets/date_field.dart';
 import '../../../core/widgets/primary_button.dart';
+import '../../../core/widgets/empty_state.dart';
+import '../../../core/widgets/error_state.dart';
+import '../../../core/widgets/loading_indicator.dart';
 import '../../auth/data/auth_repository.dart';
+import '../models/app_user.dart';
 import '../providers/intern_providers.dart';
 
-/// Admin form that creates an intern's login and profile in one go.
-class AddInternScreen extends ConsumerStatefulWidget {
-  const AddInternScreen({super.key});
+/// Admin form that creates an intern's login and profile in one go, or edits
+/// an existing intern when [internId] is given.
+class InternFormScreen extends ConsumerWidget {
+  const InternFormScreen({super.key, this.internId});
+
+  final String? internId;
 
   @override
-  ConsumerState<AddInternScreen> createState() => _AddInternScreenState();
+  Widget build(BuildContext context, WidgetRef ref) {
+    final id = internId;
+    if (id == null) return const _InternForm();
+
+    return ref
+        .watch(internProvider(id))
+        .when(
+          loading: () =>
+              Scaffold(appBar: AppBar(), body: const LoadingIndicator()),
+          error: (e, _) => Scaffold(
+            appBar: AppBar(),
+            body: const ErrorState(message: 'Could not load this intern.'),
+          ),
+          data: (intern) => intern == null
+              ? Scaffold(
+                  appBar: AppBar(),
+                  body: const EmptyState(
+                    icon: Icons.search_off,
+                    message: 'This intern no longer exists.',
+                  ),
+                )
+              : _InternForm(initial: intern),
+        );
+  }
 }
 
-class _AddInternScreenState extends ConsumerState<AddInternScreen> {
-  final _formKey = GlobalKey<FormState>();
-  final _name = TextEditingController();
-  final _email = TextEditingController();
-  final _password = TextEditingController();
-  final _phone = TextEditingController();
-  final _department = TextEditingController();
-  final _mentor = TextEditingController();
+class _InternForm extends ConsumerStatefulWidget {
+  const _InternForm({this.initial});
 
-  DateTime? _startDate;
-  DateTime? _endDate;
+  final AppUser? initial;
+
+  @override
+  ConsumerState<_InternForm> createState() => _InternFormState();
+}
+
+class _InternFormState extends ConsumerState<_InternForm> {
+  final _formKey = GlobalKey<FormState>();
+  late final _name = TextEditingController(text: widget.initial?.name);
+  late final _email = TextEditingController(text: widget.initial?.email);
+  final _password = TextEditingController();
+  late final _phone = TextEditingController(text: widget.initial?.phone);
+  late final _department = TextEditingController(
+    text: widget.initial?.department,
+  );
+  late final _mentor = TextEditingController(text: widget.initial?.mentor);
+
+  late DateTime? _startDate = widget.initial?.startDate;
+  late DateTime? _endDate = widget.initial?.endDate;
+  bool get _isEditing => widget.initial != null;
   bool _obscurePassword = true;
   bool _isSaving = false;
   String? _errorMessage;
@@ -46,29 +88,45 @@ class _AddInternScreenState extends ConsumerState<AddInternScreen> {
       _errorMessage = null;
     });
     try {
-      final intern = await ref
-          .read(internRepositoryProvider)
-          .createIntern(
+      final repo = ref.read(internRepositoryProvider);
+      final initial = widget.initial;
+      final String message;
+      if (initial == null) {
+        final intern = await repo.createIntern(
+          name: _name.text,
+          email: _email.text,
+          password: _password.text,
+          phone: _phone.text,
+          department: _department.text,
+          mentor: _mentor.text,
+          startDate: _startDate!,
+          endDate: _endDate!,
+        );
+        message =
+            '${intern.name} added. Share the email and temporary password with them.';
+      } else {
+        await repo.updateIntern(
+          initial.copyWith(
             name: _name.text,
-            email: _email.text,
-            password: _password.text,
             phone: _phone.text,
             department: _department.text,
             mentor: _mentor.text,
-            startDate: _startDate!,
-            endDate: _endDate!,
-          );
-      if (!mounted) return;
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(
-            '${intern.name} added. Share the email and temporary password with them.',
+            startDate: _startDate,
+            endDate: _endDate,
           ),
-        ),
-      );
+        );
+        message = 'Changes saved.';
+      }
+      if (!mounted) return;
+      ScaffoldMessenger.of(context)
+          .showSnackBar(SnackBar(content: Text(message)));
       Navigator.of(context).maybePop();
     } on AuthException catch (e) {
       if (mounted) setState(() => _errorMessage = e.message);
+    } catch (_) {
+      if (mounted) {
+        setState(() => _errorMessage = 'Could not save. Try again.');
+      }
     } finally {
       if (mounted) setState(() => _isSaving = false);
     }
@@ -78,7 +136,7 @@ class _AddInternScreenState extends ConsumerState<AddInternScreen> {
   Widget build(BuildContext context) {
     final scheme = Theme.of(context).colorScheme;
     return Scaffold(
-      appBar: AppBar(title: const Text('Add intern')),
+      appBar: AppBar(title: Text(_isEditing ? 'Edit intern' : 'Add intern')),
       body: SafeArea(
         child: Form(
           key: _formKey,
@@ -98,6 +156,8 @@ class _AddInternScreenState extends ConsumerState<AddInternScreen> {
               const SizedBox(height: 16),
               TextFormField(
                 controller: _email,
+                readOnly: _isEditing,
+                enabled: !_isEditing,
                 keyboardType: TextInputType.emailAddress,
                 textInputAction: TextInputAction.next,
                 decoration: const InputDecoration(
@@ -107,29 +167,31 @@ class _AddInternScreenState extends ConsumerState<AddInternScreen> {
                 validator: Validators.email,
               ),
               const SizedBox(height: 16),
-              TextFormField(
-                controller: _password,
-                obscureText: _obscurePassword,
-                textInputAction: TextInputAction.next,
-                decoration: InputDecoration(
-                  labelText: 'Temporary password',
-                  prefixIcon: const Icon(Icons.lock_outline),
-                  suffixIcon: IconButton(
-                    tooltip: _obscurePassword
-                        ? 'Show password'
-                        : 'Hide password',
-                    icon: Icon(
-                      _obscurePassword
-                          ? Icons.visibility_outlined
-                          : Icons.visibility_off_outlined,
+              if (!_isEditing) ...[
+                TextFormField(
+                  controller: _password,
+                  obscureText: _obscurePassword,
+                  textInputAction: TextInputAction.next,
+                  decoration: InputDecoration(
+                    labelText: 'Temporary password',
+                    prefixIcon: const Icon(Icons.lock_outline),
+                    suffixIcon: IconButton(
+                      tooltip: _obscurePassword
+                          ? 'Show password'
+                          : 'Hide password',
+                      icon: Icon(
+                        _obscurePassword
+                            ? Icons.visibility_outlined
+                            : Icons.visibility_off_outlined,
+                      ),
+                      onPressed: () =>
+                          setState(() => _obscurePassword = !_obscurePassword),
                     ),
-                    onPressed: () =>
-                        setState(() => _obscurePassword = !_obscurePassword),
                   ),
+                  validator: Validators.password,
                 ),
-                validator: Validators.password,
-              ),
-              const SizedBox(height: 16),
+                const SizedBox(height: 16),
+              ],
               TextFormField(
                 controller: _phone,
                 keyboardType: TextInputType.phone,
@@ -195,7 +257,7 @@ class _AddInternScreenState extends ConsumerState<AddInternScreen> {
               ],
               const SizedBox(height: 24),
               PrimaryButton(
-                label: 'Create intern',
+                label: _isEditing ? 'Save changes' : 'Create intern',
                 isLoading: _isSaving,
                 onPressed: _save,
               ),

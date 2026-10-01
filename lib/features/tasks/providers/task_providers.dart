@@ -28,3 +28,9 @@ final taskProvider = StreamProvider.autoDispose.family<Task?, String>(
 final allTasksProvider = StreamProvider.autoDispose<List<Task>>(
   (ref) => ref.watch(taskRepositoryProvider).watchAllTasks(),
 );
+
+/// Live tasks of one specific intern (admin viewing an intern).
+final tasksOfInternProvider = StreamProvider.autoDispose
+    .family<List<Task>, String>(
+      (ref, uid) => ref.watch(taskRepositoryProvider).watchInternTasks(uid),
+    );

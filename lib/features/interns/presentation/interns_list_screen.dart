@@ -125,6 +125,7 @@ class _InternTile extends StatelessWidget {
     final scheme = Theme.of(context).colorScheme;
     final initial = intern.name.isEmpty ? '?' : intern.name[0].toUpperCase();
     return ListTile(
+      onTap: () => context.push(AppRoutes.internDetail(intern.uid)),
       leading: CircleAvatar(
         backgroundColor: intern.isActive
             ? scheme.primaryContainer
