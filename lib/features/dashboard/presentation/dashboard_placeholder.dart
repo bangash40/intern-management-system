@@ -6,9 +6,14 @@ import '../../auth/providers/auth_providers.dart';
 
 /// Temporary dashboard body: greets the user and lets them sign out.
 class DashboardPlaceholder extends ConsumerWidget {
-  const DashboardPlaceholder({super.key, required this.title});
+  const DashboardPlaceholder({
+    super.key,
+    required this.title,
+    this.actions = const [],
+  });
 
   final String title;
+  final List<Widget> actions;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -21,6 +26,7 @@ class DashboardPlaceholder extends ConsumerWidget {
           children: [
             Text('Welcome, $name'),
             const SizedBox(height: 16),
+            ...actions,
             OutlinedButton.icon(
               onPressed: () => ref.read(authRepositoryProvider).signOut(),
               icon: const Icon(Icons.logout),
