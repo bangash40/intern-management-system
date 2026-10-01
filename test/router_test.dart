@@ -6,6 +6,8 @@ import 'package:intern_management_system/app/app.dart';
 import 'package:intern_management_system/app/router.dart';
 import 'package:intern_management_system/features/auth/data/auth_repository.dart';
 import 'package:intern_management_system/features/auth/providers/auth_providers.dart';
+import 'package:intern_management_system/features/tasks/data/task_repository.dart';
+import 'package:intern_management_system/features/tasks/providers/task_providers.dart';
 import 'package:intern_management_system/features/interns/models/app_user.dart';
 import 'package:intern_management_system/core/constants/enums.dart';
 
@@ -73,6 +75,9 @@ void main() {
           authRepositoryProvider.overrideWithValue(
             AuthRepository(auth: auth, firestore: firestore),
           ),
+          taskRepositoryProvider.overrideWithValue(
+            TaskRepository(firestore: firestore),
+          ),
         ],
       );
       addTearDown(container.dispose);
@@ -113,7 +118,7 @@ void main() {
     ) async {
       await addProfile(role: 'intern');
       await pumpApp(tester, signedIn: true);
-      expect(find.text('Intern Dashboard'), findsOneWidget);
+      expect(find.text('Hi, Ali'), findsOneWidget);
     });
 
     testWidgets('intern is bounced back from the admin route', (tester) async {
@@ -123,7 +128,7 @@ void main() {
       container.read(routerProvider).go(AppRoutes.admin);
       await tester.pumpAndSettle();
 
-      expect(find.text('Intern Dashboard'), findsOneWidget);
+      expect(find.text('Hi, Ali'), findsOneWidget);
       expect(find.text('Admin Dashboard'), findsNothing);
     });
 

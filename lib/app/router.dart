@@ -10,6 +10,7 @@ import '../features/dashboard/presentation/intern_dashboard_screen.dart';
 import '../features/interns/presentation/intern_form_screen.dart';
 import '../features/interns/presentation/intern_detail_screen.dart';
 import '../features/interns/presentation/interns_list_screen.dart';
+import '../features/interns/presentation/my_profile_screen.dart';
 import '../features/tasks/presentation/admin_task_detail_screen.dart';
 import '../features/tasks/presentation/all_tasks_screen.dart';
 import '../features/tasks/presentation/my_tasks_screen.dart';
@@ -32,6 +33,7 @@ class AppRoutes {
   static String adminTask(String id) => '/admin/tasks/$id';
   static String editTask(String id) => '/admin/tasks/$id/edit';
   static const String myTasks = '/intern/tasks';
+  static const String myProfile = '/intern/profile';
   static String taskDetail(String id) => '/intern/tasks/$id';
 }
 
@@ -120,6 +122,7 @@ final routerProvider = Provider<GoRouter>((ref) {
         path: AppRoutes.intern,
         builder: (_, _) => const InternDashboardScreen(),
         routes: [
+          GoRoute(path: 'profile', builder: (_, _) => const MyProfileScreen()),
           GoRoute(
             path: 'tasks',
             builder: (_, _) => const MyTasksScreen(),

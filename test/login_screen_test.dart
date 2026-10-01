@@ -7,6 +7,8 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:intern_management_system/app/app.dart';
 import 'package:intern_management_system/features/auth/data/auth_repository.dart';
 import 'package:intern_management_system/features/auth/providers/auth_providers.dart';
+import 'package:intern_management_system/features/tasks/data/task_repository.dart';
+import 'package:intern_management_system/features/tasks/providers/task_providers.dart';
 import 'package:mock_exceptions/mock_exceptions.dart';
 
 void main() {
@@ -26,6 +28,9 @@ void main() {
         overrides: [
           authRepositoryProvider.overrideWithValue(
             AuthRepository(auth: auth, firestore: firestore),
+          ),
+          taskRepositoryProvider.overrideWithValue(
+            TaskRepository(firestore: firestore),
           ),
         ],
         child: const InternManagementApp(),
@@ -117,7 +122,7 @@ void main() {
     await tester.tap(find.text('Sign in'));
     await tester.pumpAndSettle();
 
-    expect(find.text('Intern Dashboard'), findsOneWidget);
+    expect(find.text('Hi, Ali'), findsOneWidget);
     expect(find.text('Sign in'), findsNothing);
   });
 }
