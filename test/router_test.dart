@@ -8,7 +8,9 @@ import 'package:intern_management_system/features/auth/data/auth_repository.dart
 import 'package:intern_management_system/features/auth/providers/auth_providers.dart';
 import 'package:intern_management_system/features/tasks/data/task_repository.dart';
 import 'package:intern_management_system/features/tasks/providers/task_providers.dart';
+import 'package:intern_management_system/features/interns/data/intern_repository.dart';
 import 'package:intern_management_system/features/interns/models/app_user.dart';
+import 'package:intern_management_system/features/interns/providers/intern_providers.dart';
 import 'package:intern_management_system/core/constants/enums.dart';
 
 AsyncValue<AppUser?> sessionOf({String? role, bool active = true}) {
@@ -78,6 +80,9 @@ void main() {
           taskRepositoryProvider.overrideWithValue(
             TaskRepository(firestore: firestore),
           ),
+          internRepositoryProvider.overrideWithValue(
+            InternRepository(firestore: firestore),
+          ),
         ],
       );
       addTearDown(container.dispose);
@@ -110,7 +115,7 @@ void main() {
       await addProfile(role: 'admin');
       await pumpApp(tester, signedIn: true);
       expect(find.text('Admin Dashboard'), findsOneWidget);
-      expect(find.text('Welcome, Ali'), findsOneWidget);
+      expect(find.text('Hi, Ali'), findsOneWidget);
     });
 
     testWidgets('signed-in intern goes to the intern dashboard', (
@@ -142,7 +147,7 @@ void main() {
       await addProfile(role: 'admin');
       await pumpApp(tester, signedIn: true);
 
-      await tester.tap(find.text('Sign out'));
+      await tester.tap(find.byTooltip('Sign out'));
       await tester.pumpAndSettle();
 
       expect(find.text('Sign in'), findsOneWidget);

@@ -12,14 +12,17 @@ import 'widgets/task_card.dart';
 
 /// Admin list of every task with a status filter.
 class AllTasksScreen extends ConsumerStatefulWidget {
-  const AllTasksScreen({super.key});
+  const AllTasksScreen({super.key, this.initialStatus});
+
+  /// Pre-selects a status filter (for example the review queue).
+  final TaskStatus? initialStatus;
 
   @override
   ConsumerState<AllTasksScreen> createState() => _AllTasksScreenState();
 }
 
 class _AllTasksScreenState extends ConsumerState<AllTasksScreen> {
-  TaskStatus? _filter;
+  late TaskStatus? _filter = widget.initialStatus;
 
   @override
   Widget build(BuildContext context) {

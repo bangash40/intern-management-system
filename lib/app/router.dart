@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
+import '../core/constants/enums.dart';
 import '../core/widgets/loading_indicator.dart';
 import '../features/auth/presentation/login_screen.dart';
 import '../features/auth/providers/auth_providers.dart';
@@ -29,6 +30,7 @@ class AppRoutes {
   static String internDetail(String id) => '/admin/interns/$id';
   static String editIntern(String id) => '/admin/interns/$id/edit';
   static const String allTasks = '/admin/tasks';
+  static const String reviewQueue = '/admin/tasks?status=submitted';
   static const String addTask = '/admin/tasks/new';
   static String adminTask(String id) => '/admin/tasks/$id';
   static String editTask(String id) => '/admin/tasks/$id/edit';
@@ -99,7 +101,11 @@ final routerProvider = Provider<GoRouter>((ref) {
           ),
           GoRoute(
             path: 'tasks',
-            builder: (_, _) => const AllTasksScreen(),
+            builder: (_, state) => AllTasksScreen(
+              initialStatus: TaskStatus.values
+                  .where((s) => s.value == state.uri.queryParameters['status'])
+                  .firstOrNull,
+            ),
             routes: [
               GoRoute(path: 'new', builder: (_, _) => const TaskFormScreen()),
               GoRoute(
