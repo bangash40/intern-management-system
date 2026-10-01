@@ -77,7 +77,7 @@ class _AllTasksScreenState extends ConsumerState<AllTasksScreen> {
                   itemBuilder: (_, i) => TaskCard(
                     task: shown[i],
                     showAssignee: true,
-                    onTap: () => context.push(AppRoutes.editTask(shown[i].id)),
+                    onTap: () => context.push(AppRoutes.adminTask(shown[i].id)),
                   ),
                 );
               },

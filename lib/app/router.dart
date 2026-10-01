@@ -9,6 +9,7 @@ import '../features/dashboard/presentation/admin_dashboard_screen.dart';
 import '../features/dashboard/presentation/intern_dashboard_screen.dart';
 import '../features/interns/presentation/add_intern_screen.dart';
 import '../features/interns/presentation/interns_list_screen.dart';
+import '../features/tasks/presentation/admin_task_detail_screen.dart';
 import '../features/tasks/presentation/all_tasks_screen.dart';
 import '../features/tasks/presentation/my_tasks_screen.dart';
 import '../features/tasks/presentation/task_form_screen.dart';
@@ -25,6 +26,7 @@ class AppRoutes {
   static const String addIntern = '/admin/interns/new';
   static const String allTasks = '/admin/tasks';
   static const String addTask = '/admin/tasks/new';
+  static String adminTask(String id) => '/admin/tasks/$id';
   static String editTask(String id) => '/admin/tasks/$id/edit';
   static const String myTasks = '/intern/tasks';
   static String taskDetail(String id) => '/intern/tasks/$id';
@@ -84,9 +86,16 @@ final routerProvider = Provider<GoRouter>((ref) {
             routes: [
               GoRoute(path: 'new', builder: (_, _) => const TaskFormScreen()),
               GoRoute(
-                path: ':id/edit',
+                path: ':id',
                 builder: (_, state) =>
-                    TaskFormScreen(taskId: state.pathParameters['id']),
+                    AdminTaskDetailScreen(taskId: state.pathParameters['id']!),
+                routes: [
+                  GoRoute(
+                    path: 'edit',
+                    builder: (_, state) =>
+                        TaskFormScreen(taskId: state.pathParameters['id']),
+                  ),
+                ],
               ),
             ],
           ),
