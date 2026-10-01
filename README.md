@@ -42,6 +42,24 @@ The Firebase config files are not committed, so after cloning you need to add th
 2. Register the Android app (`com.example.intern_management_system`) and place the downloaded `google-services.json` in `android/app/`.
 3. Generate `lib/firebase_options.dart` with `flutterfire configure` (this also sets up iOS).
 
+## Creating the First Admin
+
+Interns cannot sign themselves up, so the first admin is created by hand:
+
+1. In the Firebase console, go to **Authentication > Users > Add user** and create the account (email and password).
+2. Copy the new user's **UID**.
+3. In **Firestore Database**, create a document `users/{UID}` with these fields:
+
+| Field | Type | Value |
+|---|---|---|
+| `uid` | string | the UID |
+| `name` | string | the admin's name |
+| `email` | string | the admin's email, lowercase |
+| `role` | string | `admin` |
+| `isActive` | boolean | `true` |
+
+After signing in, an admin lands on the admin dashboard and an intern on the intern dashboard. A user with a missing or deactivated profile is signed out.
+
 ## Folder Structure
 
 ```
@@ -67,7 +85,7 @@ test/
 - [x] Requirements and technical design
 - [x] Flutter project and folder structure
 - [x] Firebase connection
-- [ ] Authentication and role-based routing
+- [x] Authentication and role-based routing
 - [ ] Intern features
 - [ ] Admin features
 - [ ] Dashboards and charts

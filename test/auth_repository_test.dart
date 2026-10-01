@@ -47,6 +47,10 @@ void main() {
         AuthException.fromCode('network-request-failed').message,
         'No internet connection.',
       );
+      expect(
+        AuthException.fromCode('permission-denied').message,
+        contains('Firestore rules'),
+      );
       expect(AuthException.fromCode('unknown').message, contains('wrong'));
     });
   });

@@ -28,6 +28,14 @@ class AuthException implements Exception {
         return const AuthException('No internet connection.');
       case 'email-already-in-use':
         return const AuthException('This email is already in use.');
+      case 'permission-denied':
+        return const AuthException(
+          'Access to the database was denied. Check the Firestore rules.',
+        );
+      case 'unavailable':
+        return const AuthException(
+          'Service unavailable. Check your connection.',
+        );
       default:
         return const AuthException('Something went wrong. Please try again.');
     }
@@ -64,7 +72,7 @@ class AuthRepository {
         password: password,
       );
       return await _requireActiveProfile(credential.user!.uid);
-    } on FirebaseAuthException catch (e) {
+    } on FirebaseException catch (e) {
       throw AuthException.fromCode(e.code);
     }
   }
@@ -92,7 +100,7 @@ class AuthRepository {
   Future<void> sendPasswordReset(String email) async {
     try {
       await _auth.sendPasswordResetEmail(email: email.trim());
-    } on FirebaseAuthException catch (e) {
+    } on FirebaseException catch (e) {
       throw AuthException.fromCode(e.code);
     }
   }
@@ -100,7 +108,13 @@ class AuthRepository {
   Future<void> signOut() => _auth.signOut();
 
   Future<AppUser> _requireActiveProfile(String uid) async {
-    final profile = await fetchProfile(uid);
+    final AppUser? profile;
+    try {
+      profile = await fetchProfile(uid);
+    } on FirebaseException catch (e) {
+      await _auth.signOut();
+      throw AuthException.fromCode(e.code);
+    }
     if (profile == null) {
       await _auth.signOut();
       throw const AuthException('Your account is not set up. Contact admin.');

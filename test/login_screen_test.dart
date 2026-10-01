@@ -117,7 +117,7 @@ void main() {
     await tester.tap(find.text('Sign in'));
     await tester.pumpAndSettle();
 
-    expect(find.text('Signed in as ali@example.com'), findsOneWidget);
+    expect(find.text('Intern Dashboard'), findsOneWidget);
     expect(find.text('Sign in'), findsNothing);
   });
 }
