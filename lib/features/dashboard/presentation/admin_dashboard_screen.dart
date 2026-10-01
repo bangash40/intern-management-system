@@ -19,6 +19,12 @@ class AdminDashboardScreen extends StatelessWidget {
           label: const Text('Interns'),
         ),
         const SizedBox(height: 12),
+        FilledButton.icon(
+          onPressed: () => context.push(AppRoutes.allTasks),
+          icon: const Icon(Icons.checklist),
+          label: const Text('All Tasks'),
+        ),
+        const SizedBox(height: 12),
       ],
     );
   }

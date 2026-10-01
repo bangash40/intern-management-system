@@ -5,10 +5,18 @@ import '../../../../core/utils/date_utils.dart';
 import '../../models/task.dart';
 
 class TaskCard extends StatelessWidget {
-  const TaskCard({super.key, required this.task, this.onTap});
+  const TaskCard({
+    super.key,
+    required this.task,
+    this.onTap,
+    this.showAssignee = false,
+  });
 
   final Task task;
   final VoidCallback? onTap;
+
+  /// Shows who the task is assigned to (used in the admin list).
+  final bool showAssignee;
 
   @override
   Widget build(BuildContext context) {
@@ -41,6 +49,25 @@ class TaskCard extends StatelessWidget {
                   TaskStatusChip(status: task.status),
                 ],
               ),
+              if (showAssignee && task.assignedToName.isNotEmpty) ...[
+                const SizedBox(height: 8),
+                Row(
+                  children: [
+                    Icon(
+                      Icons.person_outline,
+                      size: 16,
+                      color: scheme.onSurfaceVariant,
+                    ),
+                    const SizedBox(width: 4),
+                    Text(
+                      task.assignedToName,
+                      style: theme.textTheme.bodySmall?.copyWith(
+                        color: scheme.onSurfaceVariant,
+                      ),
+                    ),
+                  ],
+                ),
+              ],
               const SizedBox(height: 12),
               Row(
                 children: [

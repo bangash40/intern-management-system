@@ -23,3 +23,8 @@ final myTasksProvider = StreamProvider.autoDispose
 final taskProvider = StreamProvider.autoDispose.family<Task?, String>(
   (ref, id) => ref.watch(taskRepositoryProvider).watchTask(id),
 );
+
+/// Live list of every task, soonest due date first (admin).
+final allTasksProvider = StreamProvider.autoDispose<List<Task>>(
+  (ref) => ref.watch(taskRepositoryProvider).watchAllTasks(),
+);
