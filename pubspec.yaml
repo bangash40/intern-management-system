@@ -1,7 +1,7 @@
 name: intern_management_system
-description: "A new Flutter project."
+description: "Intern Management System: intern profiles, tasks and progress tracking."
 publish_to: 'none'
-version: 0.1.0+1
+version: 1.0.0+1
 
 environment:
   sdk: ^3.13.0
