@@ -1,0 +1,45 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    function signedIn() {
+      return request.auth != null;
+    }
+
+    function profilePath() {
+      return /databases/$(database)/documents/users/$(request.auth.uid);
+    }
+
+    function hasProfile() {
+      return signedIn() && exists(profilePath());
+    }
+
+    function isActive() {
+      return hasProfile() && get(profilePath()).data.isActive == true;
+    }
+
+    function isAdmin() {
+      return isActive() && get(profilePath()).data.role == 'admin';
+    }
+
+    match /users/{uid} {
+      // A signed-in user can always read their own profile (the app checks
+      // isActive itself and shows a message). Admins can read everyone.
+      allow read: if isAdmin() || (signedIn() && request.auth.uid == uid);
+      allow create, update: if isAdmin();
+      allow delete: if false;
+    }
+
+    match /tasks/{taskId} {
+      allow read: if isAdmin()
+        || (isActive() && resource.data.assignedTo == request.auth.uid);
+      allow create, delete: if isAdmin();
+      allow update: if isAdmin()
+        || (isActive()
+            && resource.data.assignedTo == request.auth.uid
+            && request.resource.data.diff(resource.data).affectedKeys()
+                 .hasOnly(['status', 'submissionNote', 'updatedAt'])
+            && request.resource.data.status in ['todo', 'in_progress', 'submitted']);
+    }
+  }
+}

@@ -60,6 +60,20 @@ Interns cannot sign themselves up, so the first admin is created by hand:
 
 After signing in, an admin lands on the admin dashboard and an intern on the intern dashboard. A user with a missing or deactivated profile is signed out.
 
+## Security Rules and Indexes
+
+Access control is enforced by Firestore security rules, not by hiding screens:
+
+- Interns can read only their own profile and their own tasks, and can change only a task's status and submission note. They cannot mark a task completed.
+- Admins can read and manage everything. Deactivated users lose access to tasks.
+
+The rules are in [firestore.rules](firestore.rules) and the composite indexes the task queries need are in [firestore.indexes.json](firestore.indexes.json).
+
+To deploy them, either:
+
+- paste `firestore.rules` into **Firestore Database > Rules** in the Firebase console and click **Publish**, and create the three indexes from `firestore.indexes.json` under **Indexes**; or
+- with the Firebase CLI (`firebase deploy --only firestore`) after running `firebase init firestore` in the project folder and pointing it at these two files.
+
 ## Folder Structure
 
 ```
@@ -89,7 +103,7 @@ test/
 - [ ] Intern features
 - [ ] Admin features
 - [ ] Dashboards and charts
-- [ ] Security rules and tests
+- [x] Security rules and tests
 - [ ] v1.0.0 release
 
 ## Author
