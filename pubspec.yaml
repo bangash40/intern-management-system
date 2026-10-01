@@ -24,6 +24,15 @@ dev_dependencies:
   fake_cloud_firestore: ^4.3.0
   firebase_auth_mocks: ^0.15.2
   mock_exceptions: ^0.8.2
+  flutter_launcher_icons: ^0.14.4
 
 flutter:
   uses-material-design: true
+
+flutter_launcher_icons:
+  android: true
+  ios: true
+  image_path: "assets/icon/icon.png"
+  adaptive_icon_background: "#1565C0"
+  adaptive_icon_foreground: "assets/icon/icon_foreground.png"
+  remove_alpha_ios: true
