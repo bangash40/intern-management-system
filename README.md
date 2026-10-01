@@ -24,7 +24,7 @@ Built as an internship task for [Internee.pk](https://internee.pk).
 
 **For everyone**
 - Role-based routing: admins and interns each see only their own screens
-- Material 3 design with a light and dark mode switch
+- Material 3 design
 - Loading, empty and error states on every list
 - Readable error messages (wrong password, no internet, email already in use)
 

@@ -26,7 +26,7 @@ MockFirebaseAuth signedOutAuth() => MockFirebaseAuth(
 );
 
 void main() {
-  testWidgets('app uses Material 3 light and dark themes', (tester) async {
+  testWidgets('app uses a single Material 3 light theme', (tester) async {
     await tester.pumpWidget(
       buildApp(auth: signedOutAuth(), firestore: FakeFirebaseFirestore()),
     );
@@ -34,24 +34,8 @@ void main() {
 
     final app = tester.widget<MaterialApp>(find.byType(MaterialApp));
     expect(app.theme!.useMaterial3, isTrue);
-    expect(app.darkTheme!.brightness, Brightness.dark);
-  });
-
-  testWidgets('toggle button switches between light and dark', (tester) async {
-    await tester.pumpWidget(
-      buildApp(auth: signedOutAuth(), firestore: FakeFirebaseFirestore()),
-    );
-    await tester.pumpAndSettle();
-
-    Brightness current() =>
-        Theme.of(tester.element(find.byType(Scaffold))).brightness;
-
-    expect(current(), Brightness.light);
-    await tester.tap(find.byIcon(Icons.dark_mode));
-    await tester.pumpAndSettle();
-    expect(current(), Brightness.dark);
-    await tester.tap(find.byIcon(Icons.light_mode));
-    await tester.pumpAndSettle();
-    expect(current(), Brightness.light);
+    expect(app.theme!.brightness, Brightness.light);
+    expect(app.darkTheme, isNull);
+    expect(find.byTooltip('Toggle light / dark mode'), findsNothing);
   });
 }

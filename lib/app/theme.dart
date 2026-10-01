@@ -5,14 +5,8 @@ class AppTheme {
 
   static const Color _seed = Color(0xFF1565C0);
 
-  static ThemeData get light => _build(Brightness.light);
-  static ThemeData get dark => _build(Brightness.dark);
-
-  static ThemeData _build(Brightness brightness) {
-    final scheme = ColorScheme.fromSeed(
-      seedColor: _seed,
-      brightness: brightness,
-    );
+  static ThemeData get light {
+    final scheme = ColorScheme.fromSeed(seedColor: _seed);
     return ThemeData(
       useMaterial3: true,
       colorScheme: scheme,

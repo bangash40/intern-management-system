@@ -3,7 +3,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../app/router.dart';
-import '../../../app/theme_toggle_button.dart';
 import '../../../core/constants/enums.dart';
 import '../../../core/utils/progress.dart';
 import '../../../core/widgets/error_state.dart';
@@ -27,7 +26,6 @@ class InternDashboardScreen extends ConsumerWidget {
       appBar: AppBar(
         title: const Text('Dashboard'),
         actions: [
-          const ThemeToggleButton(),
           IconButton(
             tooltip: 'My profile',
             icon: const Icon(Icons.account_circle_outlined),

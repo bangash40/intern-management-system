@@ -3,7 +3,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../app/router.dart';
-import '../../../app/theme_toggle_button.dart';
 import '../../../core/utils/admin_stats.dart';
 import '../../../core/widgets/error_state.dart';
 import '../../../core/widgets/loading_indicator.dart';
@@ -26,7 +25,6 @@ class AdminDashboardScreen extends ConsumerWidget {
       appBar: AppBar(
         title: const Text('Admin Dashboard'),
         actions: [
-          const ThemeToggleButton(),
           IconButton(
             tooltip: 'Sign out',
             icon: const Icon(Icons.logout),

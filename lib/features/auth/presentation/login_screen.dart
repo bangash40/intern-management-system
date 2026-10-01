@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../../app/theme_toggle_button.dart';
 import '../../../core/constants/app_constants.dart';
 import '../../../core/utils/validators.dart';
 import '../../../core/widgets/primary_button.dart';
@@ -56,7 +55,6 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     return Scaffold(
-      appBar: AppBar(actions: const [ThemeToggleButton()]),
       body: SafeArea(
         child: Center(
           child: SingleChildScrollView(
