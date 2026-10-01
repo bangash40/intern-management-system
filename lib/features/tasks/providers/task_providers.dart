@@ -18,3 +18,8 @@ final myTasksProvider = StreamProvider.autoDispose
           .watch(taskRepositoryProvider)
           .watchInternTasks(uid, status: status);
     });
+
+/// Live view of a single task.
+final taskProvider = StreamProvider.autoDispose.family<Task?, String>(
+  (ref, id) => ref.watch(taskRepositoryProvider).watchTask(id),
+);

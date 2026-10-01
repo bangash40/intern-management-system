@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
+
+import '../../../app/router.dart';
 
 import '../../../core/constants/enums.dart';
 import '../../../core/widgets/empty_state.dart';
@@ -48,7 +51,11 @@ class _MyTasksScreenState extends ConsumerState<MyTasksScreen> {
                   : ListView.builder(
                       padding: const EdgeInsets.only(bottom: 16),
                       itemCount: list.length,
-                      itemBuilder: (_, i) => TaskCard(task: list[i]),
+                      itemBuilder: (_, i) => TaskCard(
+                        task: list[i],
+                        onTap: () =>
+                            context.push(AppRoutes.taskDetail(list[i].id)),
+                      ),
                     ),
             ),
           ),

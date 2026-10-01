@@ -8,6 +8,7 @@ import '../features/auth/providers/auth_providers.dart';
 import '../features/dashboard/presentation/admin_dashboard_screen.dart';
 import '../features/dashboard/presentation/intern_dashboard_screen.dart';
 import '../features/tasks/presentation/my_tasks_screen.dart';
+import '../features/tasks/presentation/task_detail_screen.dart';
 
 class AppRoutes {
   AppRoutes._();
@@ -17,6 +18,7 @@ class AppRoutes {
   static const String admin = '/admin';
   static const String intern = '/intern';
   static const String myTasks = '/intern/tasks';
+  static String taskDetail(String id) => '/intern/tasks/$id';
 }
 
 /// Decides where the user belongs, given the session and the current path.
@@ -64,7 +66,17 @@ final routerProvider = Provider<GoRouter>((ref) {
         path: AppRoutes.intern,
         builder: (_, _) => const InternDashboardScreen(),
         routes: [
-          GoRoute(path: 'tasks', builder: (_, _) => const MyTasksScreen()),
+          GoRoute(
+            path: 'tasks',
+            builder: (_, _) => const MyTasksScreen(),
+            routes: [
+              GoRoute(
+                path: ':id',
+                builder: (_, state) =>
+                    TaskDetailScreen(taskId: state.pathParameters['id']!),
+              ),
+            ],
+          ),
         ],
       ),
     ],
